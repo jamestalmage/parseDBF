@@ -87,7 +87,7 @@ export default async function (stream: Readable, encoding?: string) {
 
     const headers =  await Array.fromAsync(rowHeaders());
 
-    await reader.read(buffer, 0, 2);
+    //await reader.read(buffer, 0, 2);
 
     async function* rows() {
         const recLen = mainHeader.recLen;

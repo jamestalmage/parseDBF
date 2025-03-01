@@ -5,11 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha -R spec test/*.test.js"
+    "test": "ava"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/calvinmetcalf/parseDBF.git"
+    "url": "git://github.com/jamestalamge/parseDBF.git"
   },
   "keywords": [
     "dbf",
@@ -18,7 +18,7 @@
   "author": "Calvin Metcalf",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/calvinmetcalf/parseDBF/issues"
+    "url": "https://github.com/jamestalamge/parseDBF/issues"
   },
   "ava": {
     "extensions": {
@@ -36,7 +36,6 @@
     "@types/node": "^22.13.7",
     "ava": "^6.2.0",
     "tsimp": "^2.0.12",
-    "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "dependencies": {

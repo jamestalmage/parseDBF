@@ -29,7 +29,7 @@ function fixtureStream(path: string) {
   return fs.createReadStream(fixture(path));
 }
 
-test('should work', async (t) => {
+test.only('should work', async (t) => {
   t.deepEqual(
       await dbf(fixtureStream('watershed.dbf')),
       basic
@@ -57,7 +57,7 @@ test('should handle an empty / null dbf file', async (t) => {
   );
 });
 
-test.only('should handle utf characters', async (t) => {
+test('should handle utf characters', async (t) => {
   t.deepEqual(
       await dbf(fixtureStream('utf.dbf')),
       utf
