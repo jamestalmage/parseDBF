@@ -2,7 +2,10 @@
 
 	"extends": "@sindresorhus/tsconfig",
 	"compilerOptions": {
-		"rootDir": "./src"
+		"rootDir": "./src",
+		"lib": [
+			"esnext",
+		]
 	},
 	"include": ["./src/**/*"],
 	"exclude": ["./test/**/*"]

@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "ava"
+    "test": "xo && ava && npm run oldtest",
+    "oldtest": "mocha -R spec test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,11 @@
     "url": "https://github.com/jamestalamge/parseDBF/issues"
   },
   "ava": {
+    "files": [
+      "test/**/*",
+      "!test/data/**",
+      "!test/old.test.js"
+    ],
     "extensions": {
       "ts": "module"
     },
@@ -31,12 +37,28 @@
       "test/data"
     ]
   },
+  "xo": {
+    "envs": [
+      "node"
+    ],
+    "ignores": [
+      "test/data",
+      "decoder.js",
+      "test/old.test.js",
+      "index.js"
+    ]
+  },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^7.0.0",
     "@types/node": "^22.13.7",
     "ava": "^6.2.0",
+    "chai": "^3.3.0",
+    "jshint": "^2.8.0",
+    "mocha": "^8.1.3",
     "tsimp": "^2.0.12",
-    "typescript": "^5.8.2"
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "xo": "^0.60.0"
   },
   "dependencies": {
     "peek-readable": "^6.1.1"
