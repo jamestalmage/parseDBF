@@ -1,4 +1,4 @@
-import { createDecoder } from './decoder.js';
+import { createDecoder } from './decoder-old.js';
 function dbfHeader(data) {
   var out = {};
   out.lastUpdated = new Date(data.getUint8(1) + 1900, data.getUint8(2), data.getUint8(3));

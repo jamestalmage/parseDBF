@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import test from 'ava';
-import dbf from '../streaming-dbf.js';
+import dbf from '../index.js';
 // @ts-expect-error - no types
 import basic from './data/watershed.js';
 // @ts-expect-error - no types

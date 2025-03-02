@@ -2,9 +2,11 @@
   "name": "parsedbf",
   "version": "2.0.0",
   "description": "The DBF parsing component of shapefile-js",
-  "main": "index.js",
+  "main": "index-old.js",
   "type": "module",
   "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc",
     "test": "xo && ava && npm run oldtest",
     "oldtest": "mocha -R spec test/*.test.js"
   },
@@ -35,6 +37,7 @@
     ],
     "exclude": [
       "test/data"
+
     ]
   },
   "xo": {
@@ -43,9 +46,10 @@
     ],
     "ignores": [
       "test/data",
-      "decoder.js",
+      "distribution",
+      "decoder-old.js",
       "test/old.test.js",
-      "index.js"
+      "index-old.js"
     ]
   },
   "devDependencies": {

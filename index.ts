@@ -1,6 +1,6 @@
 import {type Readable} from 'node:stream';
 import {StreamReader} from 'peek-readable';
-import {createDecoder, type Decoder} from './typed-decoder.js';
+import {createDecoder, type Decoder} from './decoder.js';
 
 export type DbfHeader = {
 	lastUpdated: Date;

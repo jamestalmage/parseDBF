@@ -1,6 +1,6 @@
 const regex = /^(?:ANSI\s)?(\d+)$/m;
 
-export type Decoder = (view: ArrayBuffer | ArrayBufferView) => string;
+export type Decoder = (view: ArrayBuffer | DataView | Uint8Array) => string;
 
 export function createDecoder(encoding: string | undefined, second = false): Decoder {
 	if (!encoding) {
@@ -24,7 +24,7 @@ export function createDecoder(encoding: string | undefined, second = false): Dec
 
 	return browserDecoder;
 
-	function browserDecoder(view: ArrayBuffer | ArrayBufferView) {
+	function browserDecoder(view?: ArrayBuffer | DataView | Uint8Array) {
 		const decoder = new TextDecoder(encoding ?? undefined);
 		const out = decoder.decode(view, {
 			stream: true,

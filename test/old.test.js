@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import chai from 'chai';
-import dbf from '../index.js';
+import dbf from '../index-old.js';
 import basic from './data/watershed.js';
 import char11 from './data/watershed-11chars.js';
 import specialChar from './data/watershed-specialCharacters.js';
