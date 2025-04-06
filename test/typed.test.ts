@@ -3,11 +3,9 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import test from 'ava';
 import dbf from '../index.js';
-// @ts-expect-error - no types
+
 import basic from './data/watershed.js';
-// @ts-expect-error - no types
 import char11 from './data/watershed-11chars.js';
-// @ts-expect-error - no types
 import specialChar from './data/watershed-specialCharacters.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

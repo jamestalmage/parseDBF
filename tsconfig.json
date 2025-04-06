@@ -4,7 +4,8 @@
 	"compilerOptions": {
 		"lib": [
 			"esnext",
-		]
+		],
+		"allowJs": true
 	},
 	"exclude": ["./test/**/*", "./distribution/**/*"]
 }
