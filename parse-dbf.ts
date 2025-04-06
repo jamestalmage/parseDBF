@@ -1,5 +1,4 @@
-import {type Readable} from 'node:stream';
-import {StreamReader} from 'peek-readable';
+import {type IStreamReader} from 'peek-readable';
 import {createDecoder, type Decoder} from './decoder.js';
 
 export type DbfHeader = {
@@ -76,8 +75,7 @@ function parseRow(view: DataView, rowHeaders: RowHeader[], decoder: Decoder) {
 	return out;
 }
 
-export default async function parseDbf(stream: Readable, encoding?: string) {
-	const reader = new StreamReader(stream);
+export default async function parseDbf(reader: IStreamReader, encoding?: string) {
 	const decoder = createDecoder(encoding);
 
 	const buffer = Buffer.alloc(32);
