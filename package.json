@@ -2,13 +2,14 @@
   "name": "parsedbf",
   "version": "2.0.0",
   "description": "The DBF parsing component of shapefile-js",
-  "main": "index-old.js",
+  "main": "distribution/index.js",
+  "browser": "distribution/parse-dbf-browser.js",
   "type": "module",
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc",
     "test": "xo && ava && npm run oldtest",
-    "oldtest": "mocha -R spec test/*.test.js"
+    "oldtest": "mocha -R spec distribution/test/old.typed.test.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,8 @@
     "files": [
       "test/**/*",
       "!test/data/**",
-      "!test/old.test.js"
+      "!test/old.test.js",
+      "!test/old.typed.test.ts"
     ],
     "extensions": {
       "ts": "module"
@@ -37,7 +39,6 @@
     ],
     "exclude": [
       "test/data"
-
     ]
   },
   "xo": {
@@ -49,11 +50,14 @@
       "distribution",
       "decoder-old.js",
       "test/old.test.js",
-      "index-old.js"
+      "index-old.js",
+      "test/old.typed.test.ts"
     ]
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^7.0.0",
+    "@types/chai": "^5.2.1",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.13.7",
     "ava": "^6.2.0",
     "chai": "^3.3.0",

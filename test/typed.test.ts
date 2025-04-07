@@ -3,7 +3,6 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import test from 'ava';
 import dbf from '../index.js';
-
 import basic from './data/watershed.js';
 import char11 from './data/watershed-11chars.js';
 import specialChar from './data/watershed-specialCharacters.js';

@@ -21,3 +21,4 @@ package-lock.json
 .idea
 .tsimp
 distribution
+.DS_Store

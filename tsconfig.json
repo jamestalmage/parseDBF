@@ -1,11 +1,18 @@
 {
-
 	"extends": "@sindresorhus/tsconfig",
 	"compilerOptions": {
 		"lib": [
 			"esnext",
+			"esnext.array",
+			"dom",
+			"dom.iterable"
 		],
-		"allowJs": true
+		"allowJs": true,
+		"types": [
+			"node",
+			"mocha"
+		],
+		"allowSyntheticDefaultImports": true
 	},
-	"exclude": ["./test/**/*", "./distribution/**/*"]
+	"exclude": ["./distribution/**/*"]
 }
