@@ -7,10 +7,10 @@ const isNodeReadable = (stream: NodeReadable | AnyWebByteStream): stream is Node
 
 export default async function parseDbfFromStream(stream: NodeReadable | AnyWebByteStream, encoding?: string) {
 	if (isNodeReadable(stream)) {
-		const {default: nodeImplementation} = (await import ('./parse-dbf-node.js'));
+		const {default: nodeImplementation} = (await import ('./node.js'));
 		return nodeImplementation(stream, encoding);
 	}
 
-	const {default: browserImplementation} = (await import ('./parse-dbf-browser.js'));
+	const {default: browserImplementation} = (await import ('./browser.js'));
 	return browserImplementation(stream, encoding);
 }

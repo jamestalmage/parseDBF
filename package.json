@@ -1,9 +1,23 @@
 {
-  "name": "parsedbf",
+  "name": "@jamestalmage/parsedbf",
   "version": "2.0.0",
   "description": "The DBF parsing component of shapefile-js",
-  "main": "distribution/index.js",
-  "browser": "distribution/parse-dbf-browser.js",
+  "main": "distribution/parse-dbf-either.js",
+  "exports": {
+    ".": {
+      "types": "./distribution/index.d.ts",
+      "default": "./distribution/index.js",
+      "browser": "./distribution/parse-dbf-browser.js"
+    },
+    "./browser": {
+      "types": "./distribution/parse-dbf-browser.d.ts",
+      "default": "./distribution/parse-dbf-browser.js"
+    },
+    "./node": {
+      "types": "./distribution/parse-dbf-node.d.ts",
+      "default": "./distribution/parse-dbf-node.js"
+    }
+  },
   "type": "module",
   "scripts": {
     "prepublish": "npm run build",

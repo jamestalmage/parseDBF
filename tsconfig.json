@@ -13,5 +13,5 @@
 			"mocha"
 		]
 	},
-	"exclude": ["./distribution/**/*", "./node_modules/**/*"],
+	"exclude": ["./distribution/**/*", "./node_modules/**/*", "web-test-runner.config.js", "./test/**/*"],
 }
