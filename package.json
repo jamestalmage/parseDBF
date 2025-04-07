@@ -10,17 +10,20 @@
       "browser": "./distribution/parse-dbf-browser.js"
     },
     "./browser": {
-      "types": "./distribution/parse-dbf-browser.d.ts",
-      "default": "./distribution/parse-dbf-browser.js"
+      "types": "./distribution/browser.d.ts",
+      "default": "./distribution/browser.js"
     },
     "./node": {
-      "types": "./distribution/parse-dbf-node.d.ts",
-      "default": "./distribution/parse-dbf-node.js"
+      "types": "./distribution/node.d.ts",
+      "default": "./distribution/node.js"
     }
   },
+  "files": [
+    "distribution"
+  ],
   "type": "module",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublishOnly": "tsc",
     "build": "tsc",
     "test": "xo && npm run test-only",
     "test-only": "npm run test-node && npm run test-browser",
