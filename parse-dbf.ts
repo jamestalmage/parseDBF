@@ -104,7 +104,6 @@ export default async function parseDbf(reader: IStreamReader, encoding?: string)
 	// eslint-disable-next-line no-use-extend-native/no-use-extend-native
 	const headers = await Array.fromAsync(rowHeaders());
 
-
 	bytesRead += await reader.read(headerBuffer, 0, 2);
 
 	async function * rows() {
@@ -116,8 +115,10 @@ export default async function parseDbf(reader: IStreamReader, encoding?: string)
 			for (let i = 0; i < mainHeader.recordCount; i++) {
 				yield {};
 			}
-			return
+
+			return;
 		}
+
 		const recLength = mainHeader.recordLength;
 		const records = mainHeader.recordCount;
 		const buff = Buffer.alloc(recLength);
