@@ -9,7 +9,9 @@
     "prepublish": "npm run build",
     "build": "tsc",
     "test": "xo && npm run test-only",
-    "test-only": "mocha -R spec test/*.ts"
+    "test-only": "npm run test-node && npm run test-browser",
+    "test-node": "mocha",
+    "test-browser": "web-test-runner"
   },
   "repository": {
     "type": "git",
@@ -21,37 +23,30 @@
   ],
   "author": "Calvin Metcalf",
   "license": "MIT",
+  "contributors": [
+    {
+      "name": "James Talamge",
+      "email": "james@talmage.io",
+      "url": "github.com/jamestalmage"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/jamestalamge/parseDBF/issues"
   },
   "ava": {
     "files": [
       "test/**/*",
-      "!test/data/**",
-      "!test/old.test.js",
-      "!test/old.typed.test.ts"
-    ],
-    "extensions": {
-      "ts": "module"
-    },
-    "nodeArguments": [
-      "--import=tsimp"
-    ],
-    "exclude": [
-      "test/data"
+      "!test/data/**"
     ]
   },
   "xo": {
     "envs": [
-      "node"
+      "node",
+      "browser"
     ],
     "ignores": [
       "test/data",
-      "distribution",
-      "decoder-old.js",
-      "test/old.test.js",
-      "index-old.js",
-      "test/old.typed.test.ts"
+      "distribution"
     ]
   },
   "devDependencies": {
@@ -59,10 +54,11 @@
     "@types/chai": "^5.2.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.13.7",
-    "ava": "^6.2.0",
+    "@web/dev-server-esbuild": "^1.0.4",
+    "@web/test-runner": "^0.20.0",
+    "@web/test-runner-playwright": "^0.11.0",
     "chai": "^5.2.0",
     "mocha": "^11.1.0",
-    "tsimp": "^2.0.12",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "xo": "^0.60.0"

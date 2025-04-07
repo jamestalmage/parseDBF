@@ -1,6 +1,15 @@
 import {type IStreamReader} from 'peek-readable';
 import {createDecoder, type Decoder} from './decoder.js';
 
+function allocateBuffer(size: number) {
+	const buffer
+		= globalThis.Buffer && typeof globalThis.Buffer.alloc === 'function'
+			? globalThis.Buffer.alloc(size)
+			: new ArrayBuffer(size);
+
+	return new Uint8Array(buffer);
+}
+
 export type DbfHeader = {
 	lastUpdated: Date;
 	recordCount: number;
@@ -78,7 +87,7 @@ function parseRow(view: DataView, rowHeaders: RowHeader[], decoder: Decoder) {
 export default async function parseDbf(reader: IStreamReader, encoding?: string) {
 	const decoder = createDecoder(encoding);
 
-	const headerBuffer = Buffer.alloc(32);
+	const headerBuffer = allocateBuffer(32);
 	const view = new DataView(headerBuffer.buffer);
 	let bytesRead = await reader.read(headerBuffer, 0, 32);
 	if (bytesRead !== 32) {
@@ -121,7 +130,7 @@ export default async function parseDbf(reader: IStreamReader, encoding?: string)
 
 		const recLength = mainHeader.recordLength;
 		const records = mainHeader.recordCount;
-		const buff = Buffer.alloc(recLength);
+		const buff = allocateBuffer(recLength);
 		const view = new DataView(buff.buffer);
 		for (let i = 0; i < records; i++) {
 			// eslint-disable-next-line no-await-in-loop

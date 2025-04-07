@@ -1,3 +1,4 @@
 module.exports = {
-    "node-option": ["import=tsx"],
+    "spec": ["test/*.ts"],
+    "node-option": ["import=tsx"]
 }

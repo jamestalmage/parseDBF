@@ -30,40 +30,40 @@ async function getStream(filePath: string) {
 	const {fileURLToPath} = await import('node:url');
 	const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-	return fs.createReadStream(path.join(__dirname, '..', filePath));
+	return fs.createReadStream(path.join(__dirname, filePath));
 }
 
 describe('dbf', () => {
 	it('should work', async () => {
-		const stream = await getStream('./test/data/watershed.dbf');
+		const stream = await getStream('../test/data/watershed.dbf');
 		expect(await dbf(stream)).to.deep.equal(basic);
 	});
 	it('should handle 11 character field names', async () => {
-		const stream = await getStream('./test/data/watershed-11chars.dbf');
+		const stream = await getStream('../test/data/watershed-11chars.dbf');
 		expect(await dbf(stream)).to.deep.equal(char11);
 	});
 	it('should handle special characters', async () => {
-		const stream = await getStream('./test/data/watershed-specialCharacters.dbf');
+		const stream = await getStream('../test/data/watershed-specialCharacters.dbf');
 		expect(await dbf(stream)).to.deep.equal(specialChar);
 	});
 	it('should handle an empty / null dbf file', async () => {
-		const stream = await getStream('./test/data/empty.dbf');
+		const stream = await getStream('../test/data/empty.dbf');
 		expect(await dbf(stream)).to.deep.equal([{}, {}]);
 	});
 	it('should handle utf characters', async () => {
-		const stream1 = await getStream('./test/data/utf.dbf');
+		const stream1 = await getStream('../test/data/utf.dbf');
 		expect(await dbf(stream1)).to.deep.equal(utf);
-		const stream2 = await getStream('./test/data/utf.dbf');
+		const stream2 = await getStream('../test/data/utf.dbf');
 		// eslint-disable-next-line unicorn/text-encoding-identifier-case
 		expect(await dbf(stream2, 'UTF-8')).to.deep.equal(utf);
 	});
 	it('should handle utf characters and a stupid formatting', async () => {
-		const stream = await getStream('./test/data/utf.dbf');
+		const stream = await getStream('../test/data/utf.dbf');
 		expect(await dbf(stream), 'absolutely ridiculous formatting').to.deep.equal(utf);
 	});
 	it('should handle other characters', async () => {
 		const secondItemOfCodepage = async (encoding?: string) => {
-			const result = await dbf(await getStream('./test/data/codepage.dbf'), encoding);
+			const result = await dbf(await getStream('../test/data/codepage.dbf'), encoding);
 			return result[1];
 		};
 
