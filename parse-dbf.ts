@@ -10,14 +10,14 @@ function allocateBuffer(size: number) {
 	return new Uint8Array(buffer);
 }
 
-export type DbfHeader = {
+export type DbfFileHeader = {
 	lastUpdated: Date;
 	recordCount: number;
 	headerLength: number;
 	recordLength: number;
 };
 
-function dbfHeader(data: DataView): DbfHeader {
+function parseFileHeader(data: DataView): DbfFileHeader {
 	const lastUpdated = new Date(data.getUint8(1) + 1900, data.getUint8(2), data.getUint8(3));
 	const recordCount = data.getUint32(4, true);
 	const headerLength = data.getUint16(8, true);
@@ -27,24 +27,24 @@ function dbfHeader(data: DataView): DbfHeader {
 	};
 }
 
-export type RowHeader = {
+export type DbfColumnHeader = {
 	name: string;
 	dataType: string;
-	len: number;
-	decimal: number;
+	byteLength: number;
+	decimalPlaces: number;
 };
 
-function rowHeader(data: DataView, decoder: Decoder): RowHeader {
+function parseColumnHeader(data: DataView, decoder: Decoder): DbfColumnHeader {
 	const name = decoder(new Uint8Array(data.buffer.slice(0, 11)));
 	const dataType = String.fromCodePoint(data.getUint8(11));
-	const length = data.getUint8(16);
-	const decimal = data.getUint8(17);
+	const byteLength = data.getUint8(16);
+	const decimalPlaces = data.getUint8(17);
 	return {
-		name, dataType, len: length, decimal,
+		name, dataType, byteLength, decimalPlaces,
 	};
 }
 
-function rowFuncs(view: DataView, offset: number, length: number, dataType: string, decoder: Decoder) {
+function parseColumn(view: DataView, offset: number, length: number, dataType: string, decoder: Decoder) {
 	const data = new Uint8Array(view.buffer.slice(offset, offset + length));
 
 	const textData = decoder(data);
@@ -73,12 +73,12 @@ function rowFuncs(view: DataView, offset: number, length: number, dataType: stri
 	}
 }
 
-function parseRow(view: DataView, rowHeaders: RowHeader[], decoder: Decoder) {
+function parseRow(view: DataView, rowHeaders: DbfColumnHeader[], decoder: Decoder) {
 	const out: Record<string, any> = {};
 	let offset = 0;
 	for (const header of rowHeaders) {
-		out[header.name] = rowFuncs(view, offset, header.len, header.dataType, decoder);
-		offset += header.len;
+		out[header.name] = parseColumn(view, offset, header.byteLength, header.dataType, decoder);
+		offset += header.byteLength;
 	}
 
 	return out;
@@ -94,10 +94,10 @@ export default async function parseDbf(reader: IStreamReader, encoding?: string)
 		throw new Error('Unexpected end of file');
 	}
 
-	const mainHeader = dbfHeader(view);
+	const fileHeader = parseFileHeader(view);
 
-	async function * rowHeaders() {
-		for (let i = 32; i < mainHeader.headerLength - 1; i += 32) {
+	async function * parseColumnHeaders() {
+		for (let i = 32; i < fileHeader.headerLength - 1; i += 32) {
 			// eslint-disable-next-line no-await-in-loop
 			await reader.peek(headerBuffer, 0, 1);
 			if (view.getUint8(0) === 13) {
@@ -106,12 +106,12 @@ export default async function parseDbf(reader: IStreamReader, encoding?: string)
 
 			// eslint-disable-next-line no-await-in-loop
 			bytesRead += await reader.read(headerBuffer, 0, 32);
-			yield rowHeader(view, decoder);
+			yield parseColumnHeader(view, decoder);
 		}
 	}
 
 	// eslint-disable-next-line no-use-extend-native/no-use-extend-native
-	const headers = await Array.fromAsync(rowHeaders());
+	const columnHeaders = await Array.fromAsync(parseColumnHeaders());
 
 	bytesRead += await reader.read(headerBuffer, 0, 2);
 
@@ -120,25 +120,28 @@ export default async function parseDbf(reader: IStreamReader, encoding?: string)
 		//  The dbf file in that test lies about it's record length (1 byte per record instead of 0)
 		//  So it seems like it's an invalid file and that throwing would be appropriate.
 		//  Keeping for now so we can say full API compatibility
-		if (headers.length === 0) {
-			for (let i = 0; i < mainHeader.recordCount; i++) {
+		if (columnHeaders.length === 0) {
+			for (let i = 0; i < fileHeader.recordCount; i++) {
 				yield {};
 			}
 
 			return;
 		}
 
-		const recLength = mainHeader.recordLength;
-		const records = mainHeader.recordCount;
-		const buff = allocateBuffer(recLength);
+		const buff = allocateBuffer(fileHeader.recordLength);
 		const view = new DataView(buff.buffer);
-		for (let i = 0; i < records; i++) {
+		for (let i = 0; i < fileHeader.recordCount; i++) {
 			// eslint-disable-next-line no-await-in-loop
-			await reader.read(buff, 0, recLength);
-			yield parseRow(view, headers, decoder);
+			await reader.read(buff, 0, fileHeader.recordLength);
+			yield parseRow(view, columnHeaders, decoder);
 		}
 	}
 
-	// eslint-disable-next-line no-use-extend-native/no-use-extend-native
-	return Array.fromAsync(rows());
+	return {
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+		fileHeader: ({...fileHeader, lastUpdated: new Date(fileHeader.lastUpdated)} as DbfFileHeader),
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+		rowHeaders: columnHeaders.map(row => ({...row} as DbfColumnHeader)),
+		rows: rows(),
+	};
 }

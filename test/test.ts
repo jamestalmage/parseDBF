@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import dbf from '../index.js';
+import {parseDbfStream as dbf} from '../index.js';
 import basic from './data/watershed.js';
 import char11 from './data/watershed-11chars.js';
 import specialChar from './data/watershed-specialCharacters.js';

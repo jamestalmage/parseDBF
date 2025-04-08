@@ -5,12 +5,18 @@ export type {AnyWebByteStream} from 'peek-readable';
 
 const isNodeReadable = (stream: NodeReadable | AnyWebByteStream): stream is NodeReadable => 'pipe' in stream && typeof stream.pipe === 'function';
 
-export default async function parseDbfFromStream(stream: NodeReadable | AnyWebByteStream, encoding?: string) {
+export async function incrementallyParseDbfStream(stream: NodeReadable | AnyWebByteStream, encoding?: string) {
 	if (isNodeReadable(stream)) {
-		const {default: nodeImplementation} = (await import ('./node.js'));
+		const {incrementallyParseDbfStream: nodeImplementation} = (await import ('./node.js'));
 		return nodeImplementation(stream, encoding);
 	}
 
-	const {default: browserImplementation} = (await import ('./browser.js'));
+	const {incrementallyParseDbfStream: browserImplementation} = (await import ('./browser.js'));
 	return browserImplementation(stream, encoding);
+}
+
+export async function parseDbfStream(stream: NodeReadable | AnyWebByteStream, encoding?: string) {
+	const {rows} = await incrementallyParseDbfStream(stream, encoding);
+	// eslint-disable-next-line no-use-extend-native/no-use-extend-native
+	return Array.fromAsync(rows);
 }
