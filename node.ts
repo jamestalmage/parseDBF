@@ -1,15 +1,15 @@
 import {type Readable, type Readable as NodeReadable} from 'node:stream';
 import {StreamReader} from 'peek-readable';
-import parseDbf from './parse-dbf.js';
+import parseDbf, {type StreamingDbfParseResult} from './parse-dbf.js';
 
-async function incrementallyParseDbfStreamNode(nodeStream: Readable, encoding?: string) {
+async function incrementallyParseDbfStreamNode(nodeStream: Readable, encoding?: string): Promise<StreamingDbfParseResult> {
 	const reader = new StreamReader(nodeStream);
 	return parseDbf(reader, encoding);
 }
 
 export const incrementallyParseDbfStream = incrementallyParseDbfStreamNode;
 
-async function parseDbfStreamNode(stream: NodeReadable, encoding?: string) {
+async function parseDbfStreamNode(stream: NodeReadable, encoding?: string): Promise<Array<Record<string, any>>> {
 	const {rows} = await incrementallyParseDbfStream(stream, encoding);
 	// eslint-disable-next-line no-use-extend-native/no-use-extend-native
 	return Array.fromAsync(rows);

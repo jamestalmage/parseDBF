@@ -17,6 +17,19 @@ export type DbfFileHeader = {
 	recordLength: number;
 };
 
+export type DbfColumnHeader = {
+	name: string;
+	dataType: string;
+	byteLength: number;
+	decimalPlaces: number;
+};
+
+export type StreamingDbfParseResult = {
+	fileHeader: DbfFileHeader;
+	rowHeaders: DbfColumnHeader[];
+	rows: AsyncIterableIterator<Record<string, any>>;
+};
+
 function parseFileHeader(data: DataView): DbfFileHeader {
 	const lastUpdated = new Date(data.getUint8(1) + 1900, data.getUint8(2), data.getUint8(3));
 	const recordCount = data.getUint32(4, true);
@@ -26,13 +39,6 @@ function parseFileHeader(data: DataView): DbfFileHeader {
 		lastUpdated, recordCount, headerLength, recordLength,
 	};
 }
-
-export type DbfColumnHeader = {
-	name: string;
-	dataType: string;
-	byteLength: number;
-	decimalPlaces: number;
-};
 
 function parseColumnHeader(data: DataView, decoder: Decoder): DbfColumnHeader {
 	const name = decoder(new Uint8Array(data.buffer.slice(0, 11)));
@@ -137,11 +143,11 @@ export default async function parseDbf(reader: IStreamReader, encoding?: string)
 		}
 	}
 
-	return {
-		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-		fileHeader: ({...fileHeader, lastUpdated: new Date(fileHeader.lastUpdated)} as DbfFileHeader),
-		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-		rowHeaders: columnHeaders.map(row => ({...row} as DbfColumnHeader)),
+	const result: StreamingDbfParseResult = {
+		fileHeader: ({...fileHeader, lastUpdated: new Date(fileHeader.lastUpdated)}),
+		rowHeaders: columnHeaders.map(row => ({...row})),
 		rows: rows(),
 	};
+
+	return result;
 }
