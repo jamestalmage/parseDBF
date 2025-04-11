@@ -3,6 +3,7 @@ import type {AnyWebByteStream} from 'peek-readable';
 import {type StreamingDbfParseResult} from './parse-dbf.js';
 
 export type {AnyWebByteStream} from 'peek-readable';
+export type {StreamingDbfParseResult, DbfFileHeader, DbfColumnHeader} from './parse-dbf.js';
 
 const isNodeReadable = (stream: NodeReadable | AnyWebByteStream): stream is NodeReadable => 'pipe' in stream && typeof stream.pipe === 'function';
 

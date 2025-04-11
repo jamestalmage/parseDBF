@@ -1,6 +1,9 @@
 import {makeWebStreamReader, type AnyWebByteStream} from 'peek-readable';
 import parseDbf, {type StreamingDbfParseResult} from './parse-dbf.js';
 
+export type {StreamingDbfParseResult, DbfFileHeader, DbfColumnHeader} from './parse-dbf.js';
+export type {AnyWebByteStream} from 'peek-readable';
+
 async function incrementallyParseDbfStreamBrowser(webStream: AnyWebByteStream, encoding?: string): Promise<StreamingDbfParseResult> {
 	const reader = makeWebStreamReader(webStream);
 	return parseDbf(reader, encoding);
